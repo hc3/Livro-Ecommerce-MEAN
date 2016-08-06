@@ -64,3 +64,27 @@ angular.module('meanshopApp')
       });
   });
 ````
+
+O roteador do angularJS UI permite definir views e estados. Rotas, controladores e estados são associados e atemplates HTML
+por meio de $stateProvider cria o URL raiz ('/') e o associa a um template (main.html) e a um controlador (MainCtrl) um padrão
+semelhante será seguido por todos os arquivos de rotas.
+
+##### Controladores e escopos
+
+Como em qualquer framework MVC, um controlador interage com as views e os módulos. os controladores são responsáveis pela
+carga dos dados e sua representação nos templates HTML ( ou seja as view ), vamos ver um exemplo de controlador.
+
+````js
+angular.module('meanshopApp')
+  .controller('MainCtrl', function ($scope, $http, socket) {
+    $scope.awesomeThings = [];
+    
+    $http.get('/api/things')
+      .success(function(awesomeThings) {
+        $scope.awesomeThings = awesomeThings;
+    });
+  })
+
+````
+
+o que é $scope? É um objeto que "cola" o controlador ás views, providenciando o two way data binding
