@@ -87,4 +87,72 @@ angular.module('meanshopApp')
 
 ````
 
-o que é $scope? É um objeto que "cola" o controlador ás views, providenciando o two way data binding
+o que é $scope? É um objeto que "cola" o controlador ás views, providenciando o two way data binding ( cada vez que uma vairável
+é atualizada no $scope a alteração é automaticamente renderizada no HTML.
+
+##### Controladores e escopos
+
+Os templates são arquivos html enriquecidos com aprimoramentos do angularJS, templates são partes do código que vão estar em arquivos
+separados para que possamos reaproveitar o código HTML sempre que preciso.
+
+### Criando um o layout do MVP do e-commerce.
+
+vamos agora criar nosso próprio layout.
+
+#### Produtos
+
+Nessa página, todos os produtos da loja serão exibidos. Usaremos o gerador Yeoman para automatizar a crição dos arquivos
+
+** yo angular-fullstack:route products **
+
+#### Fábricas e serviços
+
+em angularJS serviços são objetos ou funções únicas vinculados a controladores ou outros componentes usando Injeção de dependência
+a tarefa do controlador é vincular os dados com a a view dentro de um $scope. Por outro lado os serviços fazem o trabalho complicado
+de obter e repassar esses dados. ** os serviços podem ser chamados de qualquer lugar não apenas dos controladores, mas também de diretivas,
+ filtros e onde mais for preciso **.
+
+<ul>
+  <li>**Serviços**: a palavra-chave this assume a instância da função. Os serviços retornam um construtor de função e, portanto, é necessário
+  usar o operador new</li>
+  <li>**Fábricas**: a palavra-chave this assume o valor devolvido pela função ao ser chamada. Permite criado **closures**</li>
+</ul>
+
+##### Criando a fábrica de produtos.
+
+vamos usar novamente o gerador Yeoman:
+
+** yo angular-fullstack:factory products **
+
+vamos usar por enquanto dados em memória vamos acessar products.service.js.
+
+/* client/app/products/products.service.js */
+
+````js
+angular.module('meanshopApp')
+  .factory('Product', function () {
+
+    return [
+      {_id: 1, title:'Product 1', price:123.45, quantity: 10, description:'Lorem ipsum dolor'},
+      {_id: 2, title:'Product 2', price:123.45, quantity: 10, description:'Lorem ipsum dolor'},
+      {_id: 3, title:'Product 3', price:123.45, quantity: 10, description:'Lorem ipsum dolor'},
+      {_id: 4, title:'Product 4', price:123.45, quantity: 10, description:'Lorem ipsum dolor'}
+    ];
+    
+````
+
+a seguir vamos injetar a fábrica em um controlador:
+
+````js
+angular.module('meanshopApp')
+  .controller('ProductsCtrl',function ($scope, Product) {
+    $scope.products = Product;
+  });
+  
+````
+
+podemos observar que apenas informamos o nome da fábrica e ela estará disponível para o controlador. e depois criamos a variável
+$scope.products e com isso products estará disponível na view.
+
+##### Criando a fábrica de produtos.
+
