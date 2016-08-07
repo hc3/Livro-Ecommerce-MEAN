@@ -14,18 +14,18 @@ um framework MVC ( model view controller ), nesse capitulo vamos ver o seguinte:
 
 ### Entendendo o AngularJS e a estrutua de pastas do cliente.
 
-vamos rodar o grunt com **grunt serve** ( lembrando que devemos estar com o servidor do mongo online **mongod** ), vamos
-observar a estrutura de pastas criadas pelo Yeoman, temos três páginas principais sendo elas ** client **, ** server**
-,** e2e **. Nesse capitulo vamos focar em client que é onde vão estar os códigos do angularJS e itens como imagens, fontes
-entre outros... dentro da pasta cliente vamos ter a pasta **app** onde vão estar os códigos do angularJS dividos da seguinte
+vamos rodar o grunt com <b>grunt serve</b> ( lembrando que devemos estar com o servidor do mongo online <b>mongod</b> ), vamos
+observar a estrutura de pastas criadas pelo Yeoman, temos três páginas principais sendo elas <b>client</b>, <b>server</b>
+,<b>e2e</b>. Nesse capitulo vamos focar em client que é onde vão estar os códigos do angularJS e itens como imagens, fontes
+entre outros... dentro da pasta cliente vamos ter a pasta <b>app</b> onde vão estar os códigos do angularJS dividos da seguinte
 maneira:
 root/client/app/cliente
 <ul>
-  <li>cliente.js - **Rotas**</li>
-  <li>cliente.controller.js - **Controladores**</li>
-  <li>cliente.controller.spec.js - **Testes**</li>
-  <li>cliente.html - **Visão**</li>
-  <li>cliente.css - **Folha de estilos**</li>
+  <li>cliente.js - <b>Rotas</b></li>
+  <li>cliente.controller.js - <b>Controladores</b></li>
+  <li>cliente.controller.spec.js - <b>Testes</b></li>
+  <li>cliente.html - <b>Visão</b></li>
+  <li>cliente.css - <b>Folha de estilos</b></li>
 </ul>
 
 #### Diretivas
@@ -103,19 +103,19 @@ vamos agora criar nosso próprio layout.
 
 Nessa página, todos os produtos da loja serão exibidos. Usaremos o gerador Yeoman para automatizar a crição dos arquivos
 
-** yo angular-fullstack:route products **
+<b> yo angular-fullstack:route products </b>
 
 #### Fábricas e serviços
 
 em angularJS serviços são objetos ou funções únicas vinculados a controladores ou outros componentes usando Injeção de dependência
 a tarefa do controlador é vincular os dados com a a view dentro de um $scope. Por outro lado os serviços fazem o trabalho complicado
-de obter e repassar esses dados. ** os serviços podem ser chamados de qualquer lugar não apenas dos controladores, mas também de diretivas,
- filtros e onde mais for preciso **.
+de obter e repassar esses dados. <b> os serviços podem ser chamados de qualquer lugar não apenas dos controladores, mas também de diretivas,
+ filtros e onde mais for preciso </b>.
 
 <ul>
-  <li>**Serviços**: a palavra-chave this assume a instância da função. Os serviços retornam um construtor de função e, portanto, é necessário
+  <li><b>Serviços</b>: a palavra-chave this assume a instância da função. Os serviços retornam um construtor de função e, portanto, é necessário
   usar o operador new</li>
-  <li>**Fábricas**: a palavra-chave this assume o valor devolvido pela função ao ser chamada. Permite criado **closures**</li>
+  <li><b>Fábricas</b>: a palavra-chave this assume o valor devolvido pela função ao ser chamada. Permite criado <b>closures</b></li>
 </ul>
 
 ##### Criando a fábrica de produtos.
@@ -124,7 +124,7 @@ quando criamos uma factory o this assume o valor devolvido pela função ao ser 
 
 vamos usar novamente o gerador Yeoman:
 
-** yo angular-fullstack:factory products **
+<b> yo angular-fullstack:factory products </b>
 
 vamos usar por enquanto dados em memória vamos acessar products.service.js.
 
@@ -193,9 +193,9 @@ $scope ( $scope.products ).
 ````
 
 <ul>
-  <li>**ng-include**: insere código a partir do HTML</li>
-  <li>**ng-repeat**: faz um loop em $scope.products criando uma div para cada produto.</li>
-  <li>**ui-sref**: chama um estado e passa os parâmetros para ele ex: /products/**:id**</li>
+  <li><b>ng-include</b>: insere código a partir do HTML</li>
+  <li><b>ng-repeat</b>: faz um loop em $scope.products criando uma div para cada produto.</li>
+  <li><b>ui-sref</b>: chama um estado e passa os parâmetros para ele ex: /products/<b>:id</b></li>
 </ul>
 
 #### Filtros
@@ -204,12 +204,12 @@ Os filtros são uma ótima maneira para exibir um dado formatado acessando o DOM
 angular ( {{ }} ) podemos criar nossos próprios filtros e o angular disponibiliza alguns como:
 
 <ul>
-  <li>**limitTo**: trunca a string ou array com um número especificado de caracteres</li>
-  <li>**currency**: faz o mesmo que number e adiciona um simbolo de moeda</li>
-  <li>**number**: esse filtro separa casas decimais</li>
-  <li>**json**: converte objetos javascript em string JSON</li>
-  <li>**lowercase/uppercase**: converte para caixa alta e baixa</li>
-  <li>**date**: pega o instante de tempo Unix e transforma em um formato especificado por parâmetros</li>
+  <li><b>limitTo</b>: trunca a string ou array com um número especificado de caracteres</li>
+  <li><b>currency</b>: faz o mesmo que number e adiciona um simbolo de moeda</li>
+  <li><b>number</b>: esse filtro separa casas decimais</li>
+  <li><b>json</b>: converte objetos javascript em string JSON</li>
+  <li><b>lowercase/uppercase</b>: converte para caixa alta e baixa</li>
+  <li><b>date</b>: pega o instante de tempo Unix e transforma em um formato especificado por parâmetros</li>
 </ul>
 
 #### Serviços
@@ -273,11 +273,11 @@ angular.module('meanshopApp')
 ````
 
 Podemos ver que nada externo a fábrica tem acesso a examplo_products essa variável é privada enquanto que todos os métodos
-devolvidos no objeto são públicos essa técnica é chamada de **closures**.
+devolvidos no objeto são públicos essa técnica é chamada de <b>closures</b>.
 
 #### Controladores
 
-**código em client/app/products/products.controller.js**
+<b>código em client/app/products/products.controller.js</b>
 
 ````js
 'use strict';
@@ -322,7 +322,7 @@ do URL.
 
 Depois de feito os controladores e serviços precisamos de uma rota que vincule um URL aos controladores e templates.
 
-** client/app/products/products.js **
+<b> client/app/products/products.js </b>
 ````js
 'use strict';
 
@@ -358,18 +358,18 @@ angular.module('meanshopApp')
 
 #### Criação da view
 
-os códigos da view vão estar em ** client/app/products/templates/ ** vou falar sobre alguns detalhes aqui a criação das views
+os códigos da view vão estar em <b>client/app/products/templates/</b> vou falar sobre alguns detalhes aqui a criação das views
 é algo que não vou explicar aqui, vou falar aqui sobre algumas diretivas do angular que são muito usadas nos templates para a
 interação:
 
 <ul>
-  <li>**ng-model**: vincula ao $scope ex: $scope.product.</li>
-  <li>**ng-include**: insere um arquivo html a partir de um caminho especificado.</li>
-  <li>**ng-submit**: disparado quando o formulário é enviado chamado o método addProduct em ProductNewCtrl.</li>
-  <li>**ui-sref**: chama um estado podendo passar parametros.</li>
-  <li>**ng-click**: dispara um ação a partir do click do botão.</li>
-  <li>**ng-show**: verifica uma condição e a partir da ai exibe ou não um elemento.</li>
-<ul>
+  <li><b>ng-model</b>: vincula ao $scope ex: $scope.product.</li>
+  <li><b>ng-include</b>: insere um arquivo html a partir de um caminho especificado.</li>
+  <li><b>ng-submit</b>: disparado quando o formulário é enviado chamado o método addProduct em ProductNewCtrl.</li>
+  <li><b>ui-sref</b>: chama um estado podendo passar parametros.</li>
+  <li><b>ng-click</b>: dispara um ação a partir do click do botão.</li>
+  <li><b>ng-show</b>: verifica uma condição e a partir da ai exibe ou não um elemento.</li>
+</ul>
 
 #RESUMO
 
