@@ -120,6 +120,8 @@ de obter e repassar esses dados. ** os serviços podem ser chamados de qualquer 
 
 ##### Criando a fábrica de produtos.
 
+quando criamos uma factory o this assume o valor devolvido pela função ao ser chamada. Permite criar closures.
+
 vamos usar novamente o gerador Yeoman:
 
 ** yo angular-fullstack:factory products **
@@ -154,5 +156,224 @@ angular.module('meanshopApp')
 podemos observar que apenas informamos o nome da fábrica e ela estará disponível para o controlador. e depois criamos a variável
 $scope.products e com isso products estará disponível na view.
 
-##### Criando a fábrica de produtos.
+##### Criando um catálogo
+
+Lembrando que estamos recebendo os dados de um factory que é injetada no controlador ProductsCtrl e disponibilizada através
+$scope ( $scope.products ).
+
+** LAYOUT clientes/app/products/products.html **
+````html
+<navbar></navbar>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 col-md-4">
+      <h1>Products</h1>
+      <p ng-show="products.length < 1"> No Products to show.</p>
+      <a ui-sref="newProduct">New Product</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-sm-4" ng-repeat="product in products">
+      <div class="thumbnail">
+        <img src="http://placehold.it/300x200" alt="{{product.title}}">
+        <div class="caption">
+          <h3>{{product.title}}</h3>
+          <p>{{product.description | limitTo:100}}</p>
+          <p>{{product.price | currency}}</p>
+          <p>
+            <a href="#" class="btn btn-primary" role="button">Buy</a>
+            <a ui-sref="viewProduct({id:product._id})" class="btn btn-default" role="button">Details</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer></footer>
+````
+
+<ul>
+  <li>**ng-include**: insere código a partir do HTML</li>
+  <li>**ng-repeat**: faz um loop em $scope.products criando uma div para cada produto.</li>
+  <li>**ui-sref**: chama um estado e passa os parâmetros para ele ex: /products/**:id**</li>
+</ul>
+
+#### Filtros
+
+Os filtros são uma ótima maneira para exibir um dado formatado acessando o DOM o uso do | ( pipe ) dentro de uma expressão
+angular ( {{ }} ) podemos criar nossos próprios filtros e o angular disponibiliza alguns como:
+
+<ul>
+  <li>**limitTo**: trunca a string ou array com um número especificado de caracteres</li>
+  <li>**currency**: faz o mesmo que number e adiciona um simbolo de moeda</li>
+  <li>**number**: esse filtro separa casas decimais</li>
+  <li>**json**: converte objetos javascript em string JSON</li>
+  <li>**lowercase/uppercase**: converte para caixa alta e baixa</li>
+  <li>**date**: pega o instante de tempo Unix e transforma em um formato especificado por parâmetros</li>
+</ul>
+
+#### Serviços
+
+** cógido em client/app/products/products.service.js **
+
+````js
+'use strict';
+
+angular.module('meanshopApp')
+  .factory('Product', function () {
+
+    var last_id = 5;
+
+    var example_products = [
+        {_id: 1, title:'Product 1', price:123.45, quantity: 10, description:'Lorem ipsum dolor'},
+        {_id: 2, title:'Product 2', price:123.45, quantity: 10, description:'Lorem ipsum dolor'},
+        {_id: 3, title:'Product 3', price:123.45, quantity: 10, description:'Lorem ipsum dolor'},
+        {_id: 4, title:'Product 4', price:123.45, quantity: 10, description:'Lorem ipsum dolor'}
+      ];
+
+    return {
+
+      query: function() {
+        return example_products;
+      },
+      get: function(prod) {
+        var result = {};
+        angular.forEach(example_products,function(product) {
+          if(product._id == prod.id)
+            return this.product = product;
+        } , result);
+        return result.product;
+      },
+      create: function(product) {
+        product._id = ++last_id;
+        example_products.push(product);
+      },
+      delete: function(params) {
+        angular.forEach(example_products,function(product, index) {
+          if(product._id == params._id) {
+            console.log(product,index);
+            example_products.splice(index,1)
+            return;
+          }
+        })
+      },
+      update: function(product) {
+        var item = this.get(product);
+        if(!item) return false;
+
+        item.title = product.title;
+        item.price = product.price;
+        item.quantity = product.quantity;
+        item.description = product.description;
+        return true;
+      }
+    }
+  });
+
+````
+
+Podemos ver que nada externo a fábrica tem acesso a examplo_products essa variável é privada enquanto que todos os métodos
+devolvidos no objeto são públicos essa técnica é chamada de **closures**.
+
+#### Controladores
+
+**código em client/app/products/products.controller.js**
+
+````js
+'use strict';
+
+angular.module('meanshopApp')
+  .controller('ProductsCtrl', function ($scope, Product) {
+    $scope.products = Product.query();
+  })
+  .controller('ProductViewCtrl',function($scope, $state, $stateParams, Product){
+    $scope.product = Product.get({id:$stateParams.id});
+
+    $scope.deleteProduct = function() {
+      Product.delete($scope.product);
+      $state.go('products');
+    };
+  })
+  .controller('ProductNewCtrl',function($scope, $state, Product) {
+    $scope.product = {};
+    $scope.addProduct = function(product) {
+      Product.create($scope.product);
+      $state.go('products');
+    };
+  })
+  .controller('ProductEditCtrl',function($scope, $state, $stateParams, Product){
+    $scope.product = Product.get({id: $stateParams.id});
+
+    $scope.editProduct = function(product) {
+      Product.update($scope.product);
+      $state.go('products');
+    };
+  });
+
+````
+
+adicionamos um controlador para cada opção de CRUD com exceção do delete que será chamado a partir de um botão na view
+e por isso que o deleteProduct é mostrado dentro do controlador Product View, temos também uma injeção de dependência
+com $scope, $state, $stateParams.
+$state permite o redirecionamento para um estado ou rota diferente e $stateParams é um objeto que contém todas as variáveis
+do URL.
+
+#### Rotas
+
+Depois de feito os controladores e serviços precisamos de uma rota que vincule um URL aos controladores e templates.
+
+** client/app/products/products.js **
+````js
+'use strict';
+
+angular.module('meanshopApp')
+  .config(function ($stateProvider) {
+    $stateProvider
+      .state('products', {
+        url: '/products',
+        templateUrl: 'app/products/products.html',
+        controller: 'ProductsCtrl'
+      })
+
+      .state('newProduct',{
+        url:'/products/new',
+        templateUrl:'app/products/templates/product-new.html',
+        controller:'ProductNewCtrl'
+      })
+
+      .state('viewProduct', {
+        url:'/products/:id',
+        templateUrl:'app/products/templates/product-view.html',
+        controller: 'ProductViewCtrl'
+      })
+
+      .state('editProduct', {
+        url:'/products/:id/edit',
+        templateUrl:'app/products/templates/product-edit.html',
+        controller:'ProductEditCtrl'
+      });
+  });
+
+````
+
+#### Criação da view
+
+os códigos da view vão estar em ** client/app/products/templates/ ** vou falar sobre alguns detalhes aqui a criação das views
+é algo que não vou explicar aqui, vou falar aqui sobre algumas diretivas do angular que são muito usadas nos templates para a
+interação:
+
+<ul>
+  <li>**ng-model**: vincula ao $scope ex: $scope.product.</li>
+  <li>**ng-include**: insere um arquivo html a partir de um caminho especificado.</li>
+  <li>**ng-submit**: disparado quando o formulário é enviado chamado o método addProduct em ProductNewCtrl.</li>
+  <li>**ui-sref**: chama um estado podendo passar parametros.</li>
+  <li>**ng-click**: dispara um ação a partir do click do botão.</li>
+  <li>**ng-show**: verifica uma condição e a partir da ai exibe ou não um elemento.</li>
+<ul>
+
+#RESUMO
+
+uma introdução estamos usando dados disponíveis na memória que já nos dão uma idéia de como podemos substituir por requisição $jttp
+a interação entre as camadas do angular me chamou muita atenção pois ainda não tinha criado um projeto seguinte tais pradrões
+deixa o entendimento do código muito mais simples, o uso do router também foi uma ótima experiência.
 
